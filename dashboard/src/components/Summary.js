@@ -9,7 +9,7 @@ const Summary = () => {
     const verifyUser = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3003/auth/verify",
+          "https://zerodha-backend-f0kb.onrender.com/auth/verify",
           {
             withCredentials: true,
           }
