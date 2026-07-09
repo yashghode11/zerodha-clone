@@ -28,7 +28,7 @@ function HomePage() {
 
       try {
         const { data } = await axios.post(
-          "http://localhost:3003/",
+          "https://zerodha-backend-f0kb.onrender.com/",
           {},
           {
             withCredentials: true,
