@@ -28,6 +28,7 @@ app.use(
       "http://localhost:3000",
       "http://localhost:3001",
       "https://zerodha-frontend-3c7j.onrender.com",
+      "https://zerodha-dashboard-y02o.onrender.com",
     ],
     credentials: true,
   })

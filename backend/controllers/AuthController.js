@@ -4,8 +4,8 @@ const bcrypt = require("bcryptjs");
 
 const cookieOptions = {
   httpOnly: true,
-  secure: false,
-  sameSite: "lax",
+  secure: true,
+  sameSite: "none",
   maxAge: 3 * 24 * 60 * 60 * 1000,
 };
 
@@ -29,7 +29,7 @@ module.exports.Signup = async (req, res) => {
       });
     }
 
-    const user = await User.create({
+    await User.create({
       email,
       password,
       username,
@@ -107,8 +107,8 @@ module.exports.Login = async (req, res) => {
 module.exports.Logout = (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: true,
+    sameSite: "none",
   });
 
   return res.status(200).json({
