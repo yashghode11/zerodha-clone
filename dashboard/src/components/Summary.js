@@ -8,22 +8,28 @@ const Summary = () => {
   useEffect(() => {
     const verifyUser = async () => {
       try {
-        const response = await axios.get(
-          "https://zerodha-backend-f0kb.onrender.com/auth/verify",
+        const { data } = await axios.get(
+          "https://zerodha-backend-f0kb.onrender.com/verify",
           {
             withCredentials: true,
           }
         );
 
-        console.log("VERIFY RESPONSE:", response.data);
+        console.log("VERIFY RESPONSE:", data);
 
-        if (response.data.status) {
-          setUsername(response.data.user.username);
+        if (data.status) {
+          setUsername(data.user);
+        } else {
+          window.location.replace(
+            "https://zerodha-frontend-3c7j.onrender.com/login"
+          );
         }
       } catch (error) {
         console.error("AUTHENTICATION ERROR:", error);
 
-        window.location.href = "http://localhost:3000/login";
+        window.location.replace(
+          "https://zerodha-frontend-3c7j.onrender.com/login"
+        );
       } finally {
         setLoading(false);
       }
@@ -33,13 +39,14 @@ const Summary = () => {
   }, []);
 
   if (loading) {
-    return <h3>Loading dashboard...</h3>;
+    return <p>Loading dashboard...</p>;
   }
 
   return (
     <>
       <div className="username">
         <h6>Hi, {username}!</h6>
+
         <hr className="divider" />
       </div>
 

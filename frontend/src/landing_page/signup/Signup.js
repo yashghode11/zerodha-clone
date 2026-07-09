@@ -1,107 +1,145 @@
-import React from "react";
-import  { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const Summary = () => {
-  const [username, setUsername] = useState("");
-  const [loading, setLoading] = useState(true);
+const Signup = () => {
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const verifyUser = async () => {
-      try {
-        const { data } = await axios.get(
-          "https://zerodha-backend-f0kb.onrender.com/auth/verify",
-          {
-            withCredentials: true,
-          }
-        );
+  const [inputValue, setInputValue] = useState({
+    email: "",
+    username: "",
+    password: "",
+  });
 
-        console.log("VERIFY RESPONSE:", data);
+  const { email, username, password } = inputValue;
 
-        if (data.status) {
-          setUsername(data.user.username);
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+
+    setInputValue({
+      ...inputValue,
+      [name]: value,
+    });
+  };
+
+  const handleError = (message) => {
+    toast.error(message, {
+      position: "bottom-left",
+    });
+  };
+
+  const handleSuccess = (message) => {
+    toast.success(message, {
+      position: "bottom-right",
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const { data } = await axios.post(
+        "https://zerodha-backend-f0kb.onrender.com/signup",
+        {
+          email,
+          username,
+          password,
+        },
+        {
+          withCredentials: true,
         }
-      } catch (error) {
-        console.error("Authentication failed:", error);
+      );
 
-        window.location.href = "http://localhost:3000/login";
-      } finally {
-        setLoading(false);
+      console.log("SIGNUP RESPONSE:", data);
+
+      if (data.success) {
+        handleSuccess(data.message);
+
+        setInputValue({
+          email: "",
+          username: "",
+          password: "",
+        });
+
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
+      } else {
+        handleError(data.message);
       }
-    };
+    } catch (error) {
+      console.error("SIGNUP ERROR:", error);
 
-    verifyUser();
-  }, []);
-
-  if (loading) {
-    return <p>Loading dashboard...</p>;
-  }
+      handleError(
+        error.response?.data?.message ||
+          "Unable to connect to the server"
+      );
+    }
+  };
 
   return (
-    <>
-      <div className="username">
-        <h6>Hi, {username}!</h6>
-        <hr className="divider" />
-      </div>
+    <div className="form_container">
+      <h2>Signup Account</h2>
 
-      <div className="section">
-        <span>
-          <p>Equity</p>
-        </span>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="email">Email</label>
 
-        <div className="data">
-          <div className="first">
-            <h3>3.74k</h3>
-            <p>Margin available</p>
-          </div>
-
-          <hr />
-
-          <div className="second">
-            <p>
-              Margins used <span>0</span>
-            </p>
-
-            <p>
-              Opening balance <span>3.74k</span>
-            </p>
-          </div>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={email}
+            placeholder="Enter your email"
+            onChange={handleOnChange}
+            autoComplete="email"
+            required
+          />
         </div>
 
-        <hr className="divider" />
-      </div>
+        <div>
+          <label htmlFor="username">Username</label>
 
-      <div className="section">
-        <span>
-          <p>Holdings (13)</p>
-        </span>
-
-        <div className="data">
-          <div className="first">
-            <h3 className="profit">
-              1.55k <small>+5.20%</small>
-            </h3>
-
-            <p>P&amp;L</p>
-          </div>
-
-          <hr />
-
-          <div className="second">
-            <p>
-              Current Value <span>31.43k</span>
-            </p>
-
-            <p>
-              Investment <span>29.88k</span>
-            </p>
-          </div>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value={username}
+            placeholder="Enter your username"
+            onChange={handleOnChange}
+            autoComplete="username"
+            required
+          />
         </div>
 
-        <hr className="divider" />
-      </div>
-    </>
+        <div>
+          <label htmlFor="password">Password</label>
+
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={password}
+            placeholder="Enter your password"
+            onChange={handleOnChange}
+            autoComplete="new-password"
+            required
+          />
+        </div>
+
+        <button type="submit">Signup</button>
+
+        <span>
+          Already have an account?{" "}
+          <Link to="/login">Login</Link>
+        </span>
+      </form>
+
+      <ToastContainer />
+    </div>
   );
 };
 
-export default Summary;
+export default Signup;
