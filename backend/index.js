@@ -27,6 +27,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "http://localhost:3001",
+      "https://zerodha-frontend-3c7j.onrender.com",
     ],
     credentials: true,
   })
