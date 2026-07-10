@@ -4,8 +4,6 @@ dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 require("dotenv").config();
 
-
-
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -37,14 +35,23 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Zerodha backend is running",
+  });
+});
+
 app.use("/auth", authRoute);
 
 app.get("/allHoldings", async (req, res) => {
   try {
     const allHoldings = await HoldingsModel.find({});
-    res.json(allHoldings);
+    return res.status(200).json(allHoldings);
   } catch (error) {
-    res.status(500).json({
+    console.error("Holdings Error:", error);
+
+    return res.status(500).json({
       success: false,
       message: "Error fetching holdings",
     });
@@ -54,9 +61,11 @@ app.get("/allHoldings", async (req, res) => {
 app.get("/allPositions", async (req, res) => {
   try {
     const allPositions = await PositionsModel.find({});
-    res.json(allPositions);
+    return res.status(200).json(allPositions);
   } catch (error) {
-    res.status(500).json({
+    console.error("Positions Error:", error);
+
+    return res.status(500).json({
       success: false,
       message: "Error fetching positions",
     });
@@ -74,12 +83,14 @@ app.post("/newOrder", async (req, res) => {
 
     await newOrder.save();
 
-    res.json({
+    return res.status(201).json({
       success: true,
       message: "Order saved successfully",
     });
   } catch (error) {
-    res.status(500).json({
+    console.error("Order Error:", error);
+
+    return res.status(500).json({
       success: false,
       message: "Error saving order",
     });
@@ -96,5 +107,5 @@ mongoose
     });
   })
   .catch((error) => {
-    console.log("MongoDB connection error:", error);
+    console.error("MongoDB connection error:", error);
   });

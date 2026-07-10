@@ -9,7 +9,7 @@ const Summary = () => {
     const verifyUser = async () => {
       try {
         const { data } = await axios.get(
-          "https://zerodha-backend-f0kb.onrender.com/verify",
+          "https://zerodha-backend-f0kb.onrender.com/auth/verify",
           {
             withCredentials: true,
           }
@@ -18,7 +18,7 @@ const Summary = () => {
         console.log("VERIFY RESPONSE:", data);
 
         if (data.status) {
-          setUsername(data.user);
+          setUsername(data.user.username);
         } else {
           window.location.replace(
             "https://zerodha-frontend-3c7j.onrender.com/login"
@@ -46,7 +46,6 @@ const Summary = () => {
     <>
       <div className="username">
         <h6>Hi, {username}!</h6>
-
         <hr className="divider" />
       </div>
 

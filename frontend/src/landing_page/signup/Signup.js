@@ -18,44 +18,32 @@ const Signup = () => {
   const handleOnChange = (e) => {
     const { name, value } = e.target;
 
-    setInputValue({
-      ...inputValue,
+    setInputValue((previousValue) => ({
+      ...previousValue,
       [name]: value,
-    });
-  };
-
-  const handleError = (message) => {
-    toast.error(message, {
-      position: "bottom-left",
-    });
-  };
-
-  const handleSuccess = (message) => {
-    toast.success(message, {
-      position: "bottom-right",
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-    const { data } = await axios.post(
-  "https://zerodha-backend-f0kb.onrender.com/signup",
-  {
-    email,
-    username,
-    password,
-  },
-  {
-    withCredentials: true,
-  }
-);
+      const { data } = await axios.post(
+        "https://zerodha-backend-f0kb.onrender.com/auth/signup",
+        {
+          email,
+          username,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       console.log("SIGNUP RESPONSE:", data);
 
       if (data.success) {
-        handleSuccess(data.message);
+        toast.success(data.message);
 
         setInputValue({
           email: "",
@@ -66,13 +54,11 @@ const Signup = () => {
         setTimeout(() => {
           navigate("/login");
         }, 1000);
-      } else {
-        handleError(data.message);
       }
     } catch (error) {
       console.error("SIGNUP ERROR:", error);
 
-      handleError(
+      toast.error(
         error.response?.data?.message ||
           "Unable to connect to the server"
       );

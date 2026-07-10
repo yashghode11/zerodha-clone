@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [inputValue, setInputValue] = useState({
@@ -25,7 +26,7 @@ const Login = () => {
 
     try {
       const { data } = await axios.post(
-        "https://zerodha-backend-f0kb.onrender.com/login",
+        "https://zerodha-backend-f0kb.onrender.com/auth/login",
         {
           email,
           password,
@@ -35,14 +36,19 @@ const Login = () => {
         }
       );
 
+      console.log("LOGIN RESPONSE:", data);
+
       if (data.success) {
         toast.success(data.message);
 
-        window.location.href =
-          "http://localhost:3001/";
+        setTimeout(() => {
+          window.location.replace(
+            "https://zerodha-dashboard-y02o.onrender.com"
+          );
+        }, 1000);
       }
     } catch (error) {
-      console.error("Login Error:", error);
+      console.error("LOGIN ERROR:", error);
 
       toast.error(
         error.response?.data?.message ||
@@ -57,9 +63,7 @@ const Login = () => {
 
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="email">
-            Email
-          </label>
+          <label htmlFor="email">Email</label>
 
           <input
             type="email"
@@ -74,9 +78,7 @@ const Login = () => {
         </div>
 
         <div>
-          <label htmlFor="password">
-            Password
-          </label>
+          <label htmlFor="password">Password</label>
 
           <input
             type="password"
@@ -90,15 +92,11 @@ const Login = () => {
           />
         </div>
 
-        <button type="submit">
-          Login
-        </button>
+        <button type="submit">Login</button>
 
         <span>
           Don't have an account?{" "}
-          <Link to="/signup">
-            Signup
-          </Link>
+          <Link to="/signup">Signup</Link>
         </span>
       </form>
 

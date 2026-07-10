@@ -29,7 +29,7 @@ module.exports.Signup = async (req, res) => {
       });
     }
 
-    await User.create({
+    const user = await User.create({
       email,
       password,
       username,
@@ -38,6 +38,11 @@ module.exports.Signup = async (req, res) => {
     return res.status(201).json({
       message: "User registered successfully",
       success: true,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      },
     });
   } catch (error) {
     console.error("Signup Error:", error);
@@ -105,11 +110,11 @@ module.exports.Login = async (req, res) => {
 };
 
 module.exports.Logout = (req, res) => {
- res.clearCookie("token", {
-  httpOnly: true,
-  secure: true,
-  sameSite: "none",
-});
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  });
 
   return res.status(200).json({
     success: true,
