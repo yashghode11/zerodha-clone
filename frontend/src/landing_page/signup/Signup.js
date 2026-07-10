@@ -40,17 +40,17 @@ const Signup = () => {
     e.preventDefault();
 
     try {
-      const { data } = await axios.post(
-        "https://zerodha-backend-f0kb.onrender.com/auth/signup",
-        {
-          email,
-          username,
-          password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+     const { data } = await axios.post(
+  "https://zerodha-backend-f0kb.onrender.com/signup",
+  {
+    email,
+    username,
+    password,
+  },
+  {
+    withCredentials: true,
+  }
+);
 
       console.log("SIGNUP RESPONSE:", data);
 

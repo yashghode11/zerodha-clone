@@ -105,11 +105,11 @@ module.exports.Login = async (req, res) => {
 };
 
 module.exports.Logout = (req, res) => {
-  res.clearCookie("token", {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-  });
+ res.clearCookie("token", {
+  httpOnly: true,
+  secure: true,
+  sameSite: "none",
+});
 
   return res.status(200).json({
     success: true,
