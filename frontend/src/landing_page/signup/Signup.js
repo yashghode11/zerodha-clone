@@ -40,7 +40,7 @@ const Signup = () => {
     e.preventDefault();
 
     try {
-     const { data } = await axios.post(
+    const { data } = await axios.post(
   "https://zerodha-backend-f0kb.onrender.com/signup",
   {
     email,
